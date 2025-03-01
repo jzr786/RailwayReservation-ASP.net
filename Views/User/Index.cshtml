@@ -1,0 +1,40 @@
+﻿@model IEnumerable<RailwayReservation.ViewModels.UserWithRoleViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h2>User Management</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td> <!-- ✅ Now, Role is available -->
+                <td>@(user.IsActive ? "Active" : "Inactive")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="AssignRole" asp-route-id="@user.Id" class="btn btn-warning">Assign Role</a>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure?');">
+                        <input type="hidden" name="id" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

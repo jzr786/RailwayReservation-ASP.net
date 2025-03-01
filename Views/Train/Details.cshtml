@@ -1,0 +1,19 @@
+﻿@model RailwayReservation.Models.Train
+
+@{
+    ViewData["Title"] = "Train Details";
+}
+
+<h2>Train Details</h2>
+
+<ul>
+    <li><strong>Train No:</strong> @Model.TrainNo</li>
+    <li><strong>Name:</strong> @Model.Name</li>
+    <li><strong>Direction:</strong> @(Model.IsUp ? "Up" : "Down")</li>
+    <li><strong>Total Coaches:</strong> @Model.TotalCoaches</li>
+    <li><strong>AC1 Seats:</strong> @Model.Ac1Seats</li>
+    <li><strong>AC3 Seats:</strong> @Model.Ac3Seats</li>
+    <li><strong>Sleeper Seats:</strong> @Model.SleeperSeats</li>
+</ul>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<RailwayReservation.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Reservations";
+}
+
+<h2>Reservations</h2>
+<p>
+    <a asp-action="Create" class="btn btn-primary">New Reservation</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>PRN</th>
+            <th>Passenger</th>
+            <th>Train</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Journey Date</th>
+            <th>Seat</th>
+            <th>Fare</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PRN</td>
+                <td>@item.User.UserName</td>
+                <td>@item.Train.TrainNo - @item.Train.Name</td>
+                <td>@item.FromStation.Name</td>
+                <td>@item.ToStation.Name</td>
+                <td>@item.JourneyDate.ToShortDateString()</td>
+                <td>@item.SeatNo (@item.CoachNo)</td>
+                <td>@item.Fare</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">View</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Cancel</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

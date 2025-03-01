@@ -1,0 +1,38 @@
+﻿@model IEnumerable<RailwayReservation.Models.Cancellation>
+
+@{
+    ViewData["Title"] = "Cancellations";
+}
+
+<h2>Cancellations</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Cancellation</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>PRN</th>
+            <th>Cancellation Date</th>
+            <th>Refund Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PRN</td>
+                <td>@item.CancellationDate</td>
+                <td>@item.RefundAmount</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">View</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

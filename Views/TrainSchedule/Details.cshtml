@@ -1,0 +1,17 @@
+﻿@model RailwayReservation.Models.TrainSchedule
+
+@{
+    ViewData["Title"] = "Train Schedule Details";
+}
+
+<h2>Train Schedule Details</h2>
+
+<ul>
+    <li><strong>Train:</strong> @Model.Train.Name</li>
+    <li><strong>Station:</strong> @Model.Station.Name</li>
+    <li><strong>Arrival Time:</strong> @Model.ArrivalTime</li>
+    <li><strong>Departure Time:</strong> @Model.DepartureTime</li>
+    <li><strong>Distance from Start:</strong> @Model.DistanceFromStart km</li>
+</ul>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

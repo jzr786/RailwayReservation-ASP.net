@@ -1,0 +1,36 @@
+﻿@model RailwayReservation.Models.TrainSchedule
+
+@{
+    ViewData["Title"] = "Add Train Schedule";
+}
+
+<h2>Add Train Schedule</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Train</label>
+        <select asp-for="TrainNo" asp-items="ViewBag.TrainNo" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Station</label>
+        <select asp-for="StationId" asp-items="ViewBag.StationId" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Arrival Time</label>
+        <input asp-for="ArrivalTime" type="datetime-local" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Departure Time</label>
+        <input asp-for="DepartureTime" type="datetime-local" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Distance from Start (km)</label>
+        <input asp-for="DistanceFromStart" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+</form>

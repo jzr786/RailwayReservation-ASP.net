@@ -1,0 +1,15 @@
+﻿@model RailwayReservation.Models.Station
+
+@{
+    ViewData["Title"] = "Station Details";
+}
+
+<h2>Station Details</h2>
+
+<p><strong>Code:</strong> @Model.Code</p>
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>Division:</strong> @Model.Division</p>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+

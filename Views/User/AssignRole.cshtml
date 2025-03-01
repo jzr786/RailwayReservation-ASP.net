@@ -1,0 +1,25 @@
+﻿@model RailwayReservation.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<h2>Assign Role</h2>
+
+<form asp-action="AssignRole" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label for="role">Select Role</label>
+        <select name="role" class="form-control" required>
+            <option value="">-- Select Role --</option> <!-- ✅ Added default option -->
+            @foreach (var role in ViewBag.Roles)
+            {
+                <option value="@role.Name">@role.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Assign</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
