@@ -1,17 +1,38 @@
 ﻿@model RailwayReservation.Models.TrainSchedule
 
-@{
-    ViewData["Title"] = "Train Schedule Details";
-}
-
 <h2>Train Schedule Details</h2>
 
-<ul>
-    <li><strong>Train:</strong> @Model.Train.Name</li>
-    <li><strong>Station:</strong> @Model.Station.Name</li>
-    <li><strong>Arrival Time:</strong> @Model.ArrivalTime</li>
-    <li><strong>Departure Time:</strong> @Model.DepartureTime</li>
-    <li><strong>Distance from Start:</strong> @Model.DistanceFromStart km</li>
-</ul>
+<div>
+    <h4>Train Schedule</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Train No</dt>
+        <dd class="col-sm-10">@Model.TrainNo</dd>
 
-<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <dt class="col-sm-2">From Station</dt>
+        <dd class="col-sm-10">@Model.FromStation.Name</dd>
+
+        <dt class="col-sm-2">To Station</dt>
+        <dd class="col-sm-10">@Model.ToStation.Name</dd>
+
+        <dt class="col-sm-2">Departure Time</dt>
+        <dd class="col-sm-10">@Model.DepartureTime.ToString("yyyy-MM-dd HH:mm")</dd>
+
+        <dt class="col-sm-2">Arrival Time</dt>
+        <dd class="col-sm-10">@Model.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</dd>
+
+        <dt class="col-sm-2">AC1 Seats</dt>
+        <dd class="col-sm-10">@Model.AC1Seats</dd>
+
+        <dt class="col-sm-2">AC3 Seats</dt>
+        <dd class="col-sm-10">@Model.AC3Seats</dd>
+
+        <dt class="col-sm-2">Sleeper Seats</dt>
+        <dd class="col-sm-10">@Model.SleeperSeats</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

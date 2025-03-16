@@ -1,16 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RailwayReservation.Data;
 using RailwayReservation.Models;
+using Rotativa.AspNetCore;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace RailwayReservation.Controllers
 {
-    [Authorize(Roles = "Customer")] // Ensure only authenticated users can access reservation
     public class ReservationController : Controller
     {
+        
+
         private readonly RailwayContext _context;
 
         public ReservationController(RailwayContext context)
@@ -18,87 +22,264 @@ namespace RailwayReservation.Controllers
             _context = context;
         }
 
-        // GET: Reservation
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(); // User is not logged in
+            }
+
             var reservations = await _context.Reservations
-                .Include(r => r.User)
-                .Include(r => r.Train)
+                .Include(r => r.TrainSchedule)
+                .ThenInclude(ts => ts.Train)
                 .Include(r => r.FromStation)
                 .Include(r => r.ToStation)
+                .Where(r => r.UserId == userId)
                 .ToListAsync();
 
             return View(reservations);
         }
 
-        // GET: Reservation/Create
-        public IActionResult Create()
+        // GET: Reservation/SelectTrain
+        [Authorize(Roles = "Customer")]
+        public IActionResult SelectTrain()
         {
-            ViewBag.Trains = _context.Trains.ToList();
-            ViewBag.Stations = _context.Stations.ToList();
+            var trains = _context.Trains.ToList();
+            ViewBag.Trains = new SelectList(trains, "TrainNo", "Name");
+            return View();
+        }
+
+        // POST: Reservation/SelectTrain
+        [HttpPost]
+        public IActionResult SelectTrain(int trainNo)
+        {
+            return RedirectToAction("SelectSchedule", new { trainNo });
+        }
+
+        // GET: Reservation/SelectSchedule
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> SelectSchedule(int trainNo)
+        {
+            var train = await _context.Trains
+        .FirstOrDefaultAsync(t => t.TrainNo == trainNo);
+
+            if (train == null)
+            {
+                ViewBag.Message = "Train not found.";
+                return View();
+            }
+
+            var schedules = await _context.TrainSchedules
+                .Include(ts => ts.Train)
+                .Include(ts => ts.FromStation)
+                .Include(ts => ts.ToStation)
+                .Where(ts => ts.TrainNo == trainNo)
+                .ToListAsync();
+
+            if (schedules == null || !schedules.Any())
+            {
+                ViewBag.Message = "No schedules available for the selected train.";
+                ViewBag.TrainName = train.Name;
+                return View();
+            }
+
+            ViewBag.TrainNo = trainNo;
+            ViewBag.TrainName = train.Name;
+            return View(schedules);
+        }
+
+        // GET: Reservation/Create
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> Create(int trainScheduleId)
+        {
+            var schedule = await _context.TrainSchedules
+                .Include(ts => ts.Train)
+                .Include(ts => ts.FromStation)
+                .Include(ts => ts.ToStation)
+                .FirstOrDefaultAsync(ts => ts.Id == trainScheduleId);
+
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.TrainSchedule = schedule;
             return View();
         }
 
         // POST: Reservation/Create
         [HttpPost]
+        [Authorize(Roles = "Customer")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Reservation reservation)
+        
+        public async Task<IActionResult> Create(int trainScheduleId, int numberOfSeats, string seatType)
         {
-            if (ModelState.IsValid)
+            var schedule = await _context.TrainSchedules
+                .Include(ts => ts.Train)
+                .Include(ts => ts.FromStation)
+                .Include(ts => ts.ToStation)
+                .FirstOrDefaultAsync(ts => ts.Id == trainScheduleId);
+
+            if (schedule == null)
             {
-                _context.Add(reservation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            return View(reservation);
+
+            // Check seat availability based on seat type
+            int availableSeats = 0;
+            decimal farePerKm = 0;
+
+            switch (seatType)
+            {
+                case "AC1":
+                    availableSeats = schedule.AC1Seats;
+                    farePerKm = schedule.AC1FarePerKm;
+                    break;
+                case "AC3":
+                    availableSeats = schedule.AC3Seats;
+                    farePerKm = schedule.AC3FarePerKm;
+                    break;
+                case "Sleeper":
+                    availableSeats = schedule.SleeperSeats;
+                    farePerKm = schedule.SleeperFarePerKm;
+                    break;
+                default:
+                    ModelState.AddModelError("", "Invalid seat type selected.");
+                    ViewBag.TrainSchedule = schedule;
+                    return View();
+            }
+
+            if (numberOfSeats > availableSeats)
+            {
+                ModelState.AddModelError("", "Not enough seats available for the selected class.");
+                ViewBag.TrainSchedule = schedule;
+                return View();
+            }
+
+            // Calculate total fare
+            decimal totalFare = schedule.Distance * farePerKm * numberOfSeats;
+
+            // Get the current user's ID
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(); // User is not logged in
+            }
+
+            var reservation = new Reservation
+            {
+                TrainScheduleId = trainScheduleId,
+                UserId = userId,
+                FromStationId = schedule.FromStationId,
+                ToStationId = schedule.ToStationId,
+                NumberOfSeats = numberOfSeats,
+                ReservationTime = DateTime.Now,
+                TotalFare = totalFare,
+                SeatType = seatType // Set the selected seat type
+            };
+
+            // Update available seats for the selected seat type
+            switch (seatType)
+            {
+                case "AC1":
+                    schedule.AC1Seats -= numberOfSeats;
+                    break;
+                case "AC3":
+                    schedule.AC3Seats -= numberOfSeats;
+                    break;
+                case "Sleeper":
+                    schedule.SleeperSeats -= numberOfSeats;
+                    break;
+            }
+
+            _context.Add(reservation);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Confirmation", new { id = reservation.Id });
         }
 
-        // GET: Reservation/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Reservation/Confirmation
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> Confirmation(int id)
         {
-            if (id == null) return NotFound();
-
             var reservation = await _context.Reservations
-                .Include(r => r.User)
-                .Include(r => r.Train)
+                .Include(r => r.TrainSchedule)
+                .ThenInclude(ts => ts.Train)
                 .Include(r => r.FromStation)
                 .Include(r => r.ToStation)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id);
 
-            if (reservation == null) return NotFound();
-
-            return View(reservation);
-        }
-
-        // GET: Reservation/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var reservation = await _context.Reservations
-                .Include(r => r.User)
-                .Include(r => r.Train)
-                .Include(r => r.FromStation)
-                .Include(r => r.ToStation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (reservation == null) return NotFound();
-
-            return View(reservation);
-        }
-
-        // POST: Reservation/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation != null)
+            if (reservation == null)
             {
-                _context.Reservations.Remove(reservation);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
+
+            return View(reservation);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var reservation = await _context.Reservations
+                .Include(r => r.TrainSchedule)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            // Increase the available seats in the train schedule based on the seat type
+            switch (reservation.SeatType)
+            {
+                case "AC1":
+                    reservation.TrainSchedule.AC1Seats += reservation.NumberOfSeats;
+                    break;
+                case "AC3":
+                    reservation.TrainSchedule.AC3Seats += reservation.NumberOfSeats;
+                    break;
+                case "Sleeper":
+                    reservation.TrainSchedule.SleeperSeats += reservation.NumberOfSeats;
+                    break;
+                default:
+                    // Handle unknown seat types if necessary
+                    break;
+            }
+
+            // Remove the reservation
+            _context.Reservations.Remove(reservation);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> PrintTicket(int id)
+        {
+            var reservation = await _context.Reservations
+                .Include(r => r.TrainSchedule)
+                .ThenInclude(ts => ts.Train)
+                .Include(r => r.FromStation)
+                .Include(r => r.ToStation)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            return new ViewAsPdf("Ticket", reservation)
+            {
+                FileName = $"Ticket_{reservation.Id}.pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                CustomSwitches = "--no-stop-slow-scripts --javascript-delay 1000"
+            };
         }
     }
 }

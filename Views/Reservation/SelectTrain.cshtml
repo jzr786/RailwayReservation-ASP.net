@@ -1,0 +1,13 @@
+﻿@model RailwayReservation.Models.Train
+
+<h2>Select Train</h2>
+
+<form asp-action="SelectTrain" method="post">
+    <div class="form-group">
+        <label>Train</label>
+        <select name="trainNo" asp-items="@(ViewBag.Trains as SelectList)" class="form-control">
+            <option value="">-- Select Train --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Next</button>
+</form>

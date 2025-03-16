@@ -12,8 +12,8 @@ using RailwayReservation.Data;
 namespace RailwayReservation.Migrations
 {
     [DbContext(typeof(RailwayContext))]
-    [Migration("20250223163638_IdentityFix")]
-    partial class IdentityFix
+    [Migration("20250314210901_UpdateReservationModel3")]
+    partial class UpdateReservationModel3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,6 +188,9 @@ namespace RailwayReservation.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -211,9 +214,10 @@ namespace RailwayReservation.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -238,30 +242,6 @@ namespace RailwayReservation.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("RailwayReservation.Models.Cancellation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CancellationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PRN")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<decimal>("RefundAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cancellations");
-                });
-
             modelBuilder.Entity("RailwayReservation.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -270,35 +250,19 @@ namespace RailwayReservation.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CoachNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Fare")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("FromStationId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("bit");
+                    b.Property<int>("NumberOfSeats")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("JourneyDate")
+                    b.Property<DateTime>("ReservationTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("PRN")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("SeatNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ToStationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainNo")
+                    b.Property<int>("TrainScheduleId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -311,7 +275,7 @@ namespace RailwayReservation.Migrations
 
                     b.HasIndex("ToStationId");
 
-                    b.HasIndex("TrainNo");
+                    b.HasIndex("TrainScheduleId");
 
                     b.HasIndex("UserId");
 
@@ -365,8 +329,7 @@ namespace RailwayReservation.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SleeperSeats")
                         .HasColumnType("int");
@@ -390,13 +353,16 @@ namespace RailwayReservation.Migrations
                     b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DistanceFromStart")
+                    b.Property<int>("FromStationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StationId")
+                    b.Property<int>("ToStationId")
                         .HasColumnType("int");
 
                     b.Property<int>("TrainNo")
@@ -404,7 +370,9 @@ namespace RailwayReservation.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StationId");
+                    b.HasIndex("FromStationId");
+
+                    b.HasIndex("ToStationId");
 
                     b.HasIndex("TrainNo");
 
@@ -476,9 +444,9 @@ namespace RailwayReservation.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("RailwayReservation.Models.Train", "Train")
+                    b.HasOne("RailwayReservation.Models.TrainSchedule", "TrainSchedule")
                         .WithMany()
-                        .HasForeignKey("TrainNo")
+                        .HasForeignKey("TrainScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -492,17 +460,23 @@ namespace RailwayReservation.Migrations
 
                     b.Navigation("ToStation");
 
-                    b.Navigation("Train");
+                    b.Navigation("TrainSchedule");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("RailwayReservation.Models.TrainSchedule", b =>
                 {
-                    b.HasOne("RailwayReservation.Models.Station", "Station")
+                    b.HasOne("RailwayReservation.Models.Station", "FromStation")
                         .WithMany()
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FromStationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RailwayReservation.Models.Station", "ToStation")
+                        .WithMany()
+                        .HasForeignKey("ToStationId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("RailwayReservation.Models.Train", "Train")
@@ -511,7 +485,9 @@ namespace RailwayReservation.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Station");
+                    b.Navigation("FromStation");
+
+                    b.Navigation("ToStation");
 
                     b.Navigation("Train");
                 });

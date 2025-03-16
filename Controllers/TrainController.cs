@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RailwayReservation.Controllers
 {
-    [Authorize(Roles = "Admin")] // Ensures only authenticated users can access train management
+
     public class TrainController : Controller
     {
         private readonly RailwayContext _context;
@@ -18,34 +18,14 @@ namespace RailwayReservation.Controllers
             _context = context;
         }
 
-        // GET: Train
+        // ✅ Visible to all users
         public async Task<IActionResult> Index()
         {
             var trains = await _context.Trains.ToListAsync();
             return View(trains);
         }
 
-        // GET: Train/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Train/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Train train)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(train);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(train);
-        }
-
-        // GET: Train/Details/5
+        // ✅ Visible to all users
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -56,7 +36,29 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // GET: Train/Edit/5
+        // ✅ Restricted to Admins
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Train train)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Trains.Add(train);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(train);
+        }
+
+        // ✅ Restricted to Admins
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -67,8 +69,8 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // POST: Train/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Train train)
         {
@@ -83,7 +85,8 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // GET: Train/Delete/5
+        // ✅ Restricted to Admins
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -94,8 +97,8 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // POST: Train/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -108,5 +111,5 @@ namespace RailwayReservation.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
-}
 
+}

@@ -1,13 +1,10 @@
 ﻿@model RailwayReservation.Models.TrainSchedule
 
-<h2>Create Train Schedule</h2>
+<h2>Edit Train Schedule</h2>
 
-@if (ViewData["TrainNo"] == null || ViewData["FromStationId"] == null || ViewData["ToStationId"] == null)
-{
-    <div class="alert alert-danger">Dropdowns are not populated. Check your Controller.</div>
-}
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
 
-<form asp-action="Create" method="post">
     <div class="form-group">
         <label>Train</label>
         <select asp-for="TrainNo" asp-items="@(ViewData["TrainNo"] as SelectList)" class="form-control">
@@ -44,7 +41,7 @@
         <span asp-validation-for="ArrivalTime" class="text-danger"></span>
     </div>
 
-    <!-- Add Distance Field -->
+    
     <div class="form-group">
         <label>Distance (in kilometers)</label>
         <input asp-for="Distance" class="form-control" />
@@ -87,11 +84,10 @@
         <span asp-validation-for="SleeperFarePerKm" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-outline-success">Save</button>
+    <button type="submit" class="btn btn-outline-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

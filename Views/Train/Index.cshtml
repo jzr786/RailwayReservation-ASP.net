@@ -6,11 +6,15 @@
 
 <h2>Train List</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add New Train</a>
-</p>
 
-<table class="table">
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-secondary">Add New Train</a>
+    </p>
+}
+
+<table class="table" id="trainTable">
     <thead>
         <tr>
             <th>Train No</th>
@@ -35,12 +39,35 @@
                 <td>@item.Ac3Seats</td>
                 <td>@item.SleeperSeats</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.TrainNo">View</a> |
-                    <a asp-action="Edit" asp-route-id="@item.TrainNo">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.TrainNo">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.TrainNo" class="btn btn-outline-dark">Details</a>
+
+                    
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span><a asp-action="Edit" asp-route-id="@item.TrainNo" class="btn btn-outline-primary">Edit</a> </span>
+                        <span><a asp-action="Delete" asp-route-id="@item.TrainNo" class="btn btn-outline-danger">Delete</a> </span>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#trainTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true,
+                language: {
+                    paginate: {
+                        next: 'Next',
+                        previous: 'Previous'
+                    }
+                }
+            });
+        });
+    </script>
+}

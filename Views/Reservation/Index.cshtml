@@ -1,46 +1,68 @@
 ﻿@model IEnumerable<RailwayReservation.Models.Reservation>
 
-@{
-    ViewData["Title"] = "Reservations";
-}
+<h2>My Reservations</h2>
 
-<h2>Reservations</h2>
-<p>
-    <a asp-action="Create" class="btn btn-primary">New Reservation</a>
-</p>
+<a asp-controller="Reservation" asp-action="SelectTrain" class="btn btn-secondary mb-3">Make New Reservation</a>
 
-<table class="table">
+<table class="table" id="trainTable">
     <thead>
         <tr>
-            <th>PRN</th>
-            <th>Passenger</th>
             <th>Train</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Journey Date</th>
-            <th>Seat</th>
-            <th>Fare</th>
-            <th>Actions</th>
+            <th>From Station</th>
+            <th>To Station</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Seats Booked</th>
+            <th>Reservation Time</th>
+            <th>Seat Type</th>
+            <th>Total Fare</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var reservation in Model)
         {
             <tr>
-                <td>@item.PRN</td>
-                <td>@item.User.UserName</td>
-                <td>@item.Train.TrainNo - @item.Train.Name</td>
-                <td>@item.FromStation.Name</td>
-                <td>@item.ToStation.Name</td>
-                <td>@item.JourneyDate.ToShortDateString()</td>
-                <td>@item.SeatNo (@item.CoachNo)</td>
-                <td>@item.Fare</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">View</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Cancel</a>
+                <td>@reservation.TrainSchedule.Train.Name</td>
+                <td>@reservation.FromStation.Name</td>
+                <td>@reservation.ToStation.Name</td>
+                <td>@reservation.TrainSchedule.DepartureTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@reservation.TrainSchedule.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@reservation.NumberOfSeats</td>
+                <td>@reservation.ReservationTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@reservation.SeatType</td>
+                <td>@reservation.TotalFare.ToString("C")</td>
+                <td class="d-flex gap-1">
+                    <a asp-action="PrintTicket" asp-route-id="@reservation.Id" class="btn btn-outline-success">Ticket</a>
+                    <form asp-action="Cancel" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@reservation.Id" />
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to cancel this reservation?');">Cancel</button>
+                    </form>
                 </td>
+
             </tr>
         }
     </tbody>
 </table>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#trainTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true,
+                language: {
+                    paginate: {
+                        next: 'Next',
+                        previous: 'Previous'
+                    }
+                }
+            });
+        });
+    </script>
+}
 

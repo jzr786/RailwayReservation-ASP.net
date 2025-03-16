@@ -90,13 +90,15 @@ namespace RailwayReservation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole("Admin");
 
-            if (!isAdmin)
+            // ✅ Assign a default role if not selected
+            if (string.IsNullOrEmpty(model.Role))
             {
-                model.Role = "Customer"; // Enforce role for non-admin users
+                model.Role = "Customer"; // ✅ Default role
             }
 
             if (!ModelState.IsValid)
@@ -126,7 +128,7 @@ namespace RailwayReservation.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 IsActive = true,
-                RoleName = model.Role // ✅ Assign role directly
+                RoleName = model.Role // ✅ Assign role before creating the user
             };
 
             string password = string.IsNullOrWhiteSpace(model.Password)
@@ -158,6 +160,7 @@ namespace RailwayReservation.Controllers
 
             return View(model);
         }
+
 
 
 

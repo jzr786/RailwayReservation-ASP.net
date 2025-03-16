@@ -1,0 +1,49 @@
+﻿@model IEnumerable<RailwayReservation.Models.TrainSchedule>
+
+@{
+    var trainName = ViewBag.TrainName as string;
+    var message = ViewBag.Message as string;
+}
+
+<h2>Select Schedule</h2>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info">@message</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Train</th>
+                <th>From Station</th>
+                <th>To Station</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>AC1 Seats Available</th>
+                <th>AC3 Seats Available</th>
+                <th>Sleeper Seats Available</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var schedule in Model)
+            {
+                <tr>
+                    <td>@schedule.Train.Name</td>
+                    <td>@schedule.FromStation.Name</td>
+                    <td>@schedule.ToStation.Name</td>
+                    <td>@schedule.DepartureTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@schedule.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@schedule.AC1Seats</td>
+                    <td>@schedule.AC3Seats</td>
+                    <td>@schedule.SleeperSeats</td>
+                    <td>
+                        <a asp-action="Create" asp-route-trainScheduleId="@schedule.Id" class="btn btn-outline-success">Book</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

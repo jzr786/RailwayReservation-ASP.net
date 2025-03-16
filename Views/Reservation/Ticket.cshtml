@@ -1,0 +1,20 @@
+﻿@model RailwayReservation.Models.Reservation
+
+<h2>Train Ticket</h2>
+
+<div style="border: 1px solid #000; padding: 20px; font-family: Arial, sans-serif;">
+    <h3>Reservation Details</h3>
+    <p><strong>Reservation ID:</strong> @Model.Id</p>
+    <p><strong>Train:</strong> @Model.TrainSchedule.Train.Name</p>
+    <p><strong>From Station:</strong> @Model.FromStation.Name</p>
+    <p><strong>To Station:</strong> @Model.ToStation.Name</p>
+    <p><strong>Departure:</strong> @Model.TrainSchedule.DepartureTime</p>
+    <p><strong>Arrival:</strong> @Model.TrainSchedule.ArrivalTime</p>
+    <p><strong>Seats Booked:</strong> @Model.NumberOfSeats</p>
+    <p><strong>Reservation Time:</strong> @Model.ReservationTime</p>
+    <p><strong>Total Fare:</strong> @Model.TotalFare</p>
+</div>
+
+<div style="margin-top: 20px;">
+    <p>Thank you for choosing our railway service. Have a safe journey!</p>
+</div>

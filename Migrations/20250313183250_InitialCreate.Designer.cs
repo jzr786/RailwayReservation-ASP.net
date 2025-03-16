@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RailwayReservation.Data;
 
@@ -11,9 +12,11 @@ using RailwayReservation.Data;
 namespace RailwayReservation.Migrations
 {
     [DbContext(typeof(RailwayContext))]
-    partial class RailwayContextModelSnapshot : ModelSnapshot
+    [Migration("20250313183250_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,24 +250,20 @@ namespace RailwayReservation.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("FromStationId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReservationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SeatType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ToStationId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalFare")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("TrainScheduleId")
                         .HasColumnType("int");
@@ -354,34 +353,16 @@ namespace RailwayReservation.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AC1FarePerKm")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("AC1Seats")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("AC3FarePerKm")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("AC3Seats")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Distance")
-                        .HasColumnType("int");
-
                     b.Property<int>("FromStationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("SleeperFarePerKm")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("SleeperSeats")
                         .HasColumnType("int");
 
                     b.Property<int>("ToStationId")

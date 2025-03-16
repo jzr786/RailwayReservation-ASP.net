@@ -2,28 +2,20 @@
 {
 
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Train
     {
         [Key]
-        public int TrainNo { get; set; }  // Unique Train Number (Primary Key)
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Ensure Identity column
+        public int TrainNo { get; set; }  // Auto-generated ID
 
-        [Required, MaxLength(100)]
         public string Name { get; set; }
-
-        public bool IsUp { get; set; }  // True = Upward direction, False = Downward
-
-        [Required]
+        public bool IsUp { get; set; }
         public int TotalCoaches { get; set; }
-
-        [Required]
         public int Ac1Seats { get; set; }
-
-        [Required]
         public int Ac3Seats { get; set; }
-
-        [Required]
         public int SleeperSeats { get; set; }
     }
-}
 
+}

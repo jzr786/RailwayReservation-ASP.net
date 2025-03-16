@@ -1,46 +1,50 @@
-﻿namespace RailwayReservation.Models
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RailwayReservation.Models
 {
-
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
     public class Reservation
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required, MaxLength(10)]
-        public string PRN { get; set; }  // Unique Ticket Number
+        [Required]
+        public int TrainScheduleId { get; set; }
 
-        [Required, ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }  // Customer Info
+        [ForeignKey("TrainScheduleId")]
+        public TrainSchedule TrainSchedule { get; set; }
 
-        [Required, ForeignKey("Train")]
-        public int TrainNo { get; set; }
-        public Train Train { get; set; }
+        [Required]
+        public string UserId { get; set; } 
 
-        [Required, ForeignKey("Station")]
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
+
+        [Required]
         public int FromStationId { get; set; }
+
+        [ForeignKey("FromStationId")]
         public Station FromStation { get; set; }
 
-        [Required, ForeignKey("Station")]
+        [Required]
         public int ToStationId { get; set; }
+
+        [ForeignKey("ToStationId")]
         public Station ToStation { get; set; }
 
         [Required]
-        public DateTime JourneyDate { get; set; }
+        public int NumberOfSeats { get; set; } 
 
         [Required]
-        public string SeatNo { get; set; }
+        public DateTime ReservationTime { get; set; }
 
         [Required]
-        public string CoachNo { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal TotalFare { get; set; }
 
         [Required]
-        public decimal Fare { get; set; }
-
-        public bool IsCancelled { get; set; } = false;
+        public string SeatType { get; set; } // e.g., AC1, AC3, Sleeper
     }
 }
-

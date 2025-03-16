@@ -19,7 +19,8 @@ namespace RailwayReservation.Models
 
         public static string DefaultPassword => "Default@123"; // Default alphanumeric password
 
+        [Required] // ✅ Ensure RoleName is required
         [MaxLength(50)]
-        public string RoleName { get; set; } // Store user role for quick access
+        public string RoleName { get; set; } = "Customer"; // ✅ Set a default role
     }
 }

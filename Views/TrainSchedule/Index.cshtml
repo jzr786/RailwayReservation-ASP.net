@@ -1,23 +1,25 @@
 ﻿@model IEnumerable<RailwayReservation.Models.TrainSchedule>
 
-@{
-    ViewData["Title"] = "Train Schedules";
-}
-
 <h2>Train Schedules</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add New Schedule</a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-secondary">Create New Schedule</a>
+    </p>
+}
 
-<table class="table">
+<table class="table" id="trainTable">
     <thead>
         <tr>
-            <th>Train</th>
-            <th>Station</th>
-            <th>Arrival Time</th>
-            <th>Departure Time</th>
-            <th>Distance from Start (km)</th>
+            <th>Train Name</th>
+            <th>From Station</th>
+            <th>To Station</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>AC1 Seats</th>
+            <th>AC3 Seats</th>
+            <th>Sleeper Seats</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -26,16 +28,42 @@
         {
             <tr>
                 <td>@item.Train.Name</td>
-                <td>@item.Station.Name</td>
-                <td>@item.ArrivalTime</td>
-                <td>@item.DepartureTime</td>
-                <td>@item.DistanceFromStart</td>
+                <td>@item.FromStation.Name</td>
+                <td>@item.ToStation.Name</td>
+                <td>@item.DepartureTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.AC1Seats</td>
+                <td>@item.AC3Seats</td>
+                <td>@item.SleeperSeats</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">View</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-dark">Details</a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span><a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a></span>
+                        <span><a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a></span>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#trainTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true,
+                language: {
+                    paginate: {
+                        next: 'Next',
+                        previous: 'Previous'
+                    }
+                }
+            });
+        });
+    </script>
+}

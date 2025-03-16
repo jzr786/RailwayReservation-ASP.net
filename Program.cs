@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RailwayReservation.Models; // Adjust this namespace if necessary
-using RailwayReservation.Data; // Ensure this is correct based on your project structure
+using RailwayReservation.Data;
+using Rotativa.AspNetCore; // Ensure this is correct based on your project structure
 
 public class Program
 {
@@ -35,6 +36,8 @@ public class Program
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
 
+        RotativaConfiguration.Setup(builder.Environment.WebRootPath, "C:\\wkhtmltox\\bin");
+
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())
@@ -49,6 +52,8 @@ public class Program
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
+
+       
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();

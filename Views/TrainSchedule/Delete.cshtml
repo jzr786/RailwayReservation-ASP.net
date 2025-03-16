@@ -1,0 +1,48 @@
+﻿@model RailwayReservation.Models.TrainSchedule
+
+<h2>Delete Train Schedule</h2>
+
+<div class="alert alert-danger">
+    <strong>Are you sure you want to delete this train schedule?</strong>
+</div>
+
+<table class="table">
+    <tr>
+        <th>Train</th>
+        <td>@Model.Train?.Name</td>
+    </tr>
+    <tr>
+        <th>From Station</th>
+        <td>@Model.FromStation?.Name</td>
+    </tr>
+    <tr>
+        <th>To Station</th>
+        <td>@Model.ToStation?.Name</td>
+    </tr>
+    <tr>
+        <th>Departure Time</th>
+        <td>@Model.DepartureTime.ToString("yyyy-MM-dd HH:mm")</td>
+    </tr>
+    <tr>
+        <th>Arrival Time</th>
+        <td>@Model.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+    </tr>
+    <tr>
+        <th>AC1 Seats</th>
+        <td>@Model.AC1Seats</td>
+    </tr>
+    <tr>
+        <th>AC3 Seats</th>
+        <td>@Model.AC3Seats</td>
+    </tr>
+    <tr>
+        <th>Sleeper Seats</th>
+        <td>@Model.SleeperSeats</td>
+    </tr>
+</table>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-outline-danger">Confirm Delete</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

@@ -12,7 +12,7 @@
     <div class="form-group">
         <label for="role">Select Role</label>
         <select name="role" class="form-control" required>
-            <option value="">-- Select Role --</option> <!-- ✅ Added default option -->
+            <option value="">-- Select Role --</option> 
             @foreach (var role in ViewBag.Roles)
             {
                 <option value="@role.Name">@role.Name</option>
@@ -20,6 +20,6 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Assign</button>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
+    <button type="submit" class="btn btn-outline-primary">Assign</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
 </form>

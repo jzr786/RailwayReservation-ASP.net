@@ -1,67 +1,37 @@
 ﻿@model RailwayReservation.Models.Reservation
 
 @{
-    ViewData["Title"] = "Create Reservation";
+    var schedule = ViewBag.TrainSchedule as RailwayReservation.Models.TrainSchedule;
 }
 
-<h2>Create Reservation</h2>
+<h2>Book Seats</h2>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label>PRN</label>
-        <input asp-for="PRN" class="form-control" required />
-    </div>
-
+<form asp-action="Create" method="post">
+    <input type="hidden" name="trainScheduleId" value="@schedule.Id" />
     <div class="form-group">
         <label>Train</label>
-        <select asp-for="TrainNo" class="form-control">
-            @foreach (var train in ViewBag.Trains)
-            {
-                <option value="@train.TrainNo">@train.TrainNo - @train.Name</option>
-            }
-        </select>
+        <input class="form-control" value="@schedule.Train.Name" readonly />
     </div>
-
     <div class="form-group">
         <label>From Station</label>
-        <select asp-for="FromStationId" class="form-control">
-            @foreach (var station in ViewBag.Stations)
-            {
-                <option value="@station.Id">@station.Name</option>
-            }
-        </select>
+        <input class="form-control" value="@schedule.FromStation.Name" readonly />
     </div>
-
     <div class="form-group">
         <label>To Station</label>
-        <select asp-for="ToStationId" class="form-control">
-            @foreach (var station in ViewBag.Stations)
-            {
-                <option value="@station.Id">@station.Name</option>
-            }
+        <input class="form-control" value="@schedule.ToStation.Name" readonly />
+    </div>
+    <div class="form-group">
+        <label for="seatType">Seat Type</label>
+        <select class="form-control" id="seatType" name="seatType" required>
+            <option value="">-- Select Seat Type --</option>
+            <option value="AC1">AC1</option>
+            <option value="AC3">AC3</option>
+            <option value="Sleeper">Sleeper</option>
         </select>
     </div>
-
     <div class="form-group">
-        <label>Journey Date</label>
-        <input type="date" asp-for="JourneyDate" class="form-control" required />
+        <label for="numberOfSeats">Number of Seats</label>
+        <input type="number" class="form-control" id="numberOfSeats" name="numberOfSeats" min="1" required />
     </div>
-
-    <div class="form-group">
-        <label>Seat No</label>
-        <input asp-for="SeatNo" class="form-control" required />
-    </div>
-
-    <div class="form-group">
-        <label>Coach No</label>
-        <input asp-for="CoachNo" class="form-control" required />
-    </div>
-
-    <div class="form-group">
-        <label>Fare</label>
-        <input asp-for="Fare" class="form-control" required />
-    </div>
-
-    <button type="submit" class="btn btn-success">Book Ticket</button>
+    <button type="submit" class="btn btn-outline-success">Book</button>
 </form>
-

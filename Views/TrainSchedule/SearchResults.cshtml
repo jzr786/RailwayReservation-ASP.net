@@ -1,0 +1,42 @@
+﻿@model IEnumerable<RailwayReservation.Models.TrainSchedule>
+
+<h2>Search Results</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No trains found for the selected criteria.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Train</th>
+                <th>From Station</th>
+                <th>To Station</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>AC1 Seats</th>
+                <th>AC3 Seats</th>
+                <th>Sleeper Seats</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var schedule in Model)
+            {
+                <tr>
+                    <td>@schedule.Train.Name</td>
+                    <td>@schedule.FromStation.Name</td>
+                    <td>@schedule.ToStation.Name</td>
+                    <td>@schedule.DepartureTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@schedule.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@schedule.AC1Seats</td>
+                    <td>@schedule.AC3Seats</td>
+                    <td>@schedule.SleeperSeats</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Back to Search</a>
