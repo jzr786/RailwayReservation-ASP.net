@@ -7,8 +7,8 @@
     public class Train
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Ensure Identity column
-        public int TrainNo { get; set; }  // Auto-generated ID
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
+        public int TrainNo { get; set; }  
 
         public string Name { get; set; }
         public bool IsUp { get; set; }

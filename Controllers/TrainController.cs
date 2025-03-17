@@ -18,14 +18,14 @@ namespace RailwayReservation.Controllers
             _context = context;
         }
 
-        // ✅ Visible to all users
+        
         public async Task<IActionResult> Index()
         {
             var trains = await _context.Trains.ToListAsync();
             return View(trains);
         }
 
-        // ✅ Visible to all users
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -36,7 +36,7 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // ✅ Restricted to Admins
+        
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -57,7 +57,7 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // ✅ Restricted to Admins
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -85,7 +85,7 @@ namespace RailwayReservation.Controllers
             return View(train);
         }
 
-        // ✅ Restricted to Admins
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {

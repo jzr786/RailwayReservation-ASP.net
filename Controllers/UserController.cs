@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace RailwayReservation.Controllers
 {
-    [Authorize(Roles = "Admin")] // ✅ Ensure only Admin can access this
+    [Authorize(Roles = "Admin")] 
     public class UserController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,7 +21,7 @@ namespace RailwayReservation.Controllers
             _roleManager = roleManager;
         }
 
-        // ✅ LIST USERS
+        
         public async Task<IActionResult> Index()
         {
             var users = _userManager.Users.ToList();
@@ -44,7 +44,7 @@ namespace RailwayReservation.Controllers
             return View(userList);
         }
 
-        // ✅ EDIT USER
+        
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -61,7 +61,7 @@ namespace RailwayReservation.Controllers
             var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null) return NotFound();
 
-            // ✅ Update user properties
+            
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.IsActive = model.IsActive;
@@ -77,7 +77,7 @@ namespace RailwayReservation.Controllers
             return View(model);
         }
 
-        // ✅ ASSIGN ROLE
+        
         [HttpGet]
         public async Task<IActionResult> AssignRole(string id)
         {
@@ -100,14 +100,14 @@ namespace RailwayReservation.Controllers
 
             await _userManager.AddToRoleAsync(user, role); // Assign new role
 
-            // ✅ Update RoleName in ApplicationUser
+            
             user.RoleName = role;
             await _userManager.UpdateAsync(user);
 
             return RedirectToAction("Index");
         }
 
-        // ✅ DELETE USER
+        
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
@@ -122,7 +122,7 @@ namespace RailwayReservation.Controllers
                 return NotFound();
             }
 
-            return View(user); // ✅ This will show Delete.cshtml (confirmation page)
+            return View(user); 
         }
 
         [HttpPost, ActionName("Delete")]

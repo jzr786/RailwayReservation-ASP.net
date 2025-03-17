@@ -29,7 +29,7 @@ namespace RailwayReservation.Controllers
             _passwordHasher = passwordHasher;
         }
 
-        // ✅ LOGIN ACTION
+        
         [HttpGet]
         public IActionResult Login()
         {
@@ -53,37 +53,37 @@ namespace RailwayReservation.Controllers
                     return View(model);
                 }
 
-                // ✅ Update LastLoginDate before signing in
+                
                 user.LastLoginDate = DateTime.UtcNow;
                 await _userManager.UpdateAsync(user);
 
                 await _signInManager.SignInAsync(user, model.RememberMe);
-                return RedirectToAction("Index", "Home"); // Redirect after successful login
+                return RedirectToAction("Index", "Home"); 
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);
         }
 
-        // ✅ LOGOUT ACTION
+        
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
-        // ✅ REGISTER ACTION
+        
         [HttpGet]
-        [AllowAnonymous] // ✅ This allows anyone to access Register
+        [AllowAnonymous] 
         public IActionResult Register()
         {
             if (!User.IsInRole("Admin"))
             {
-                ViewBag.Roles = new SelectList(new List<string> { "Customer" }); // Normal users can only register as Customers
+                ViewBag.Roles = new SelectList(new List<string> { "Customer" }); 
             }
             else
             {
-                ViewBag.Roles = new SelectList(new List<string> { "Admin", "Customer" }); // Admins can create both roles
+                ViewBag.Roles = new SelectList(new List<string> { "Admin", "Customer" }); 
             }
             return View();
         }
@@ -95,10 +95,10 @@ namespace RailwayReservation.Controllers
         {
             bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole("Admin");
 
-            // ✅ Assign a default role if not selected
+            
             if (string.IsNullOrEmpty(model.Role))
             {
-                model.Role = "Customer"; // ✅ Default role
+                model.Role = "Customer"; 
             }
 
             if (!ModelState.IsValid)
@@ -128,7 +128,7 @@ namespace RailwayReservation.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 IsActive = true,
-                RoleName = model.Role // ✅ Assign role before creating the user
+                RoleName = model.Role 
             };
 
             string password = string.IsNullOrWhiteSpace(model.Password)
@@ -164,7 +164,7 @@ namespace RailwayReservation.Controllers
 
 
 
-        // ✅ ACCESS DENIED PAGE
+        
         public IActionResult AccessDenied()
         {
             return View();

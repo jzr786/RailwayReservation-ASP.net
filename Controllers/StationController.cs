@@ -18,14 +18,14 @@ namespace RailwayReservation.Controllers
             _context = context;
         }
 
-        // GET: Station
+        
         public IActionResult Index()
         {
             var stations = _context.Stations.ToList();
             return View(stations);
         }
 
-        // GET: Station/Details/5
+        
         public IActionResult Details(int id)
         {
             var station = _context.Stations.FirstOrDefault(s => s.Id == id);
@@ -36,14 +36,14 @@ namespace RailwayReservation.Controllers
             return View(station);
         }
 
-        // GET: Station/Create
+        
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Station/Create
+       
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]

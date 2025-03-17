@@ -74,7 +74,7 @@ namespace RailwayReservation.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Repopulate dropdowns in case of validation error
+           
                 ViewData["TrainNo"] = new SelectList(_context.Trains, "TrainNo", "Name", trainSchedule.TrainNo);
                 ViewData["FromStationId"] = new SelectList(_context.Stations, "Id", "Name", trainSchedule.FromStationId);
                 ViewData["ToStationId"] = new SelectList(_context.Stations, "Id", "Name", trainSchedule.ToStationId);
@@ -202,16 +202,16 @@ namespace RailwayReservation.Controllers
             if (string.IsNullOrEmpty(fromStation) || string.IsNullOrEmpty(toStation))
             {
                 ModelState.AddModelError("", "Please select both departure and destination stations.");
-                return RedirectToAction("Index", "Home"); // Redirect to the home page if validation fails
+                return RedirectToAction("Index", "Home"); 
             }
 
             if (travelDate == default)
             {
                 ModelState.AddModelError("", "Please select a valid travel date.");
-                return RedirectToAction("Index", "Home"); // Redirect to the home page if validation fails
+                return RedirectToAction("Index", "Home"); 
             }
 
-            // Query the database for matching schedules
+            
             var schedules = await _context.TrainSchedules
                 .Include(ts => ts.Train)
                 .Include(ts => ts.FromStation)
@@ -222,7 +222,7 @@ namespace RailwayReservation.Controllers
                     ts.DepartureTime.Date == travelDate.Date)
                 .ToListAsync();
 
-            // Pass the results to the view
+            
             return View(schedules);
         }
 

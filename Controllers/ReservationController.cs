@@ -29,7 +29,7 @@ namespace RailwayReservation.Controllers
 
             if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized(); // User is not logged in
+                return Unauthorized(); 
             }
 
             var reservations = await _context.Reservations
@@ -43,7 +43,7 @@ namespace RailwayReservation.Controllers
             return View(reservations);
         }
 
-        // GET: Reservation/SelectTrain
+        
         [Authorize(Roles = "Customer")]
         public IActionResult SelectTrain()
         {
@@ -52,14 +52,14 @@ namespace RailwayReservation.Controllers
             return View();
         }
 
-        // POST: Reservation/SelectTrain
+        
         [HttpPost]
         public IActionResult SelectTrain(int trainNo)
         {
             return RedirectToAction("SelectSchedule", new { trainNo });
         }
 
-        // GET: Reservation/SelectSchedule
+        
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> SelectSchedule(int trainNo)
         {
@@ -91,7 +91,7 @@ namespace RailwayReservation.Controllers
             return View(schedules);
         }
 
-        // GET: Reservation/Create
+        
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Create(int trainScheduleId)
         {
@@ -110,7 +110,7 @@ namespace RailwayReservation.Controllers
             return View();
         }
 
-        // POST: Reservation/Create
+        
         [HttpPost]
         [Authorize(Roles = "Customer")]
         [ValidateAntiForgeryToken]
@@ -128,7 +128,7 @@ namespace RailwayReservation.Controllers
                 return NotFound();
             }
 
-            // Check seat availability based on seat type
+            
             int availableSeats = 0;
             decimal farePerKm = 0;
 
@@ -159,15 +159,15 @@ namespace RailwayReservation.Controllers
                 return View();
             }
 
-            // Calculate total fare
+            
             decimal totalFare = schedule.Distance * farePerKm * numberOfSeats;
 
-            // Get the current user's ID
+            
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized(); // User is not logged in
+                return Unauthorized(); 
             }
 
             var reservation = new Reservation
@@ -179,10 +179,10 @@ namespace RailwayReservation.Controllers
                 NumberOfSeats = numberOfSeats,
                 ReservationTime = DateTime.Now,
                 TotalFare = totalFare,
-                SeatType = seatType // Set the selected seat type
+                SeatType = seatType 
             };
 
-            // Update available seats for the selected seat type
+            
             switch (seatType)
             {
                 case "AC1":
@@ -202,7 +202,7 @@ namespace RailwayReservation.Controllers
             return RedirectToAction("Confirmation", new { id = reservation.Id });
         }
 
-        // GET: Reservation/Confirmation
+        
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Confirmation(int id)
         {
@@ -235,7 +235,7 @@ namespace RailwayReservation.Controllers
                 return NotFound();
             }
 
-            // Increase the available seats in the train schedule based on the seat type
+            
             switch (reservation.SeatType)
             {
                 case "AC1":
@@ -248,11 +248,11 @@ namespace RailwayReservation.Controllers
                     reservation.TrainSchedule.SleeperSeats += reservation.NumberOfSeats;
                     break;
                 default:
-                    // Handle unknown seat types if necessary
+                    
                     break;
             }
 
-            // Remove the reservation
+            
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 

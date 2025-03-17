@@ -35,9 +35,9 @@ namespace RailwayReservation.Models
         public DateTime ArrivalTime { get; set; }
 
         [Required]
-        public int Distance { get; set; } // Distance in kilometers
+        public int Distance { get; set; } 
 
-        // Seats and fare rules for each class
+        
         public int AC1Seats { get; set; }
         public decimal AC1FarePerKm { get; set; }
 

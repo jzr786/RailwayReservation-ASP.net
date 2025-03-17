@@ -16,13 +16,13 @@ namespace RailwayReservation.Controllers
             _context = context;
         }
 
-        // GET: Home/Index
+        
         public async Task<IActionResult> Index()
         {
-            // Fetch the list of stations
+            
             var stations = await _context.Stations.ToListAsync();
 
-            // Pass the list of stations to the view
+            
             ViewBag.Stations = stations;
 
             return View();

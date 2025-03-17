@@ -45,6 +45,6 @@ namespace RailwayReservation.Models
         public decimal TotalFare { get; set; }
 
         [Required]
-        public string SeatType { get; set; } // e.g., AC1, AC3, Sleeper
+        public string SeatType { get; set; } 
     }
 }

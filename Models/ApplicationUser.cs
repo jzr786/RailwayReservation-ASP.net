@@ -10,17 +10,17 @@ namespace RailwayReservation.Models
         public string FullName { get; set; }
 
         [Required]
-        public bool IsActive { get; set; } = true; // Default active
+        public bool IsActive { get; set; } = true; 
 
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Default creation date
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
 
-        public DateTime? LastLoginDate { get; set; } // Track last login date
+        public DateTime? LastLoginDate { get; set; } 
 
-        public static string DefaultPassword => "Default@123"; // Default alphanumeric password
+        public static string DefaultPassword => "Default@123"; 
 
-        [Required] // ✅ Ensure RoleName is required
+        [Required] 
         [MaxLength(50)]
-        public string RoleName { get; set; } = "Customer"; // ✅ Set a default role
+        public string RoleName { get; set; } = "Customer"; 
     }
 }
