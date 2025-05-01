@@ -1,13 +1,33 @@
 ﻿@model RailwayReservation.Models.Train
 
-<h2>Select Train</h2>
+@{
+    ViewData["Title"] = "Select Train";
+}
 
-<form asp-action="SelectTrain" method="post">
-    <div class="form-group">
-        <label>Train</label>
-        <select name="trainNo" asp-items="@(ViewBag.Trains as SelectList)" class="form-control">
-            <option value="">-- Select Train --</option>
-        </select>
+<section class="text-center text-lg-start">
+    <div class="card mb-3 shadow">
+        <div class="row g-0 d-flex align-items-center">
+            <div class="col-lg-4 d-none d-lg-flex">
+                <img src="https://img.freepik.com/free-photo/thai-retro-train-kanchanaburi-thailand_335224-778.jpg?t=st=1746126125~exp=1746129725~hmac=ae6c1712d18dacb3f36e17d614102538caa7f0fa793e24f9f36edf969f69e9fd&w=996"
+                     alt="Train Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body py-5 px-md-5">
+                    <h2 class="fw-bold mb-5">Select Train</h2>
+
+                    <form asp-action="SelectTrain" method="post">
+                        <div class="form-outline mb-4">
+                            <select name="trainNo" asp-items="@(ViewBag.Trains as SelectList)" class="form-control" required>
+                                <option value="">-- Select Train --</option>
+                            </select>
+                            
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary btn-block mb-4">Next</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Next</button>
-</form>
+</section>

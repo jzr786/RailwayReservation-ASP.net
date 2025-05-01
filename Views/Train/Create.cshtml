@@ -4,47 +4,57 @@
     ViewData["Title"] = "Add Train";
 }
 
-<h2>Add Train</h2>
+<section class="text-center text-lg-start">
+    <div class="card mb-3 shadow">
+        <div class="row g-0 d-flex align-items-center">
+            <div class="col-lg-4 d-none d-lg-flex">
+                <img src="https://img.freepik.com/free-photo/selective-focus-red-black-train-die-cast_417767-211.jpg?t=st=1746127258~exp=1746130858~hmac=f688f2c585f1f985519448e3533d2d07c14a9ed1a4280bbf4d082817e2e06dee&w=740"
+                     alt="Add Train Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body py-5 px-md-5">
+                    <h2 class="fw-bold mb-5">Add New Train</h2>
 
-<form asp-action="Create">
-    @* <div class="form-group">
-    <label>Train Number</label>
-    <input asp-for="TrainNo" class="form-control" required />
-</div> *@
+                    <form asp-action="Create">
 
-    <div class="form-group">
-        <label>Name</label>
-        <input asp-for="Name" class="form-control" required />
+                        <div class="form-outline mb-4">
+                            <input asp-for="Name" class="form-control" required />
+                            <label class="form-label" asp-for="Name">Name</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <select asp-for="IsUp" class="form-control">
+                                <option value="true">Up</option>
+                                <option value="false">Down</option>
+                            </select>
+                            <label class="form-label" asp-for="IsUp">Direction</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="TotalCoaches" class="form-control" required />
+                            <label class="form-label" asp-for="TotalCoaches">Total Coaches</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="Ac1Seats" class="form-control" required />
+                            <label class="form-label" asp-for="Ac1Seats">AC1 Seats</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="Ac3Seats" class="form-control" required />
+                            <label class="form-label" asp-for="Ac3Seats">AC3 Seats</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="SleeperSeats" class="form-control" required />
+                            <label class="form-label" asp-for="SleeperSeats">Sleeper Seats</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary btn-block mb-3">Save</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label>Direction</label>
-        <select asp-for="IsUp" class="form-control">
-            <option value="true">Up</option>
-            <option value="false">Down</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Total Coaches</label>
-        <input asp-for="TotalCoaches" class="form-control" required />
-    </div>
-
-    <div class="form-group">
-        <label>AC1 Seats</label>
-        <input asp-for="Ac1Seats" class="form-control" required />
-    </div>
-
-    <div class="form-group">
-        <label>AC3 Seats</label>
-        <input asp-for="Ac3Seats" class="form-control" required />
-    </div>
-
-    <div class="form-group">
-        <label>Sleeper Seats</label>
-        <input asp-for="SleeperSeats" class="form-control" required />
-    </div>
-
-    <button type="submit" class="btn btn-outline-success">Save</button>
-</form>
-
+</section>

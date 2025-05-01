@@ -4,22 +4,49 @@
     ViewData["Title"] = "Create Station";
 }
 
-<h2>Create Station</h2>
+<section class="text-center text-lg-start">
+    <div class="card mb-3 shadow">
+        <div class="row g-0 d-flex align-items-center">
+            <div class="col-lg-4 d-none d-lg-flex">
+                <img src="https://img.freepik.com/premium-photo/railway-stration-moscow-russia-one-point-perspective-view-emty-platform_115128-117.jpg?w=740"
+                     alt="Station Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body py-5 px-md-5">
+                    <h2 class="fw-bold mb-5">Create New Station</h2>
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label class="form-label">Code</label>
-        <input asp-for="Code" class="form-control" required />
+                    <form asp-action="Create" method="post">
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="Code" class="form-control" required />
+                            <label class="form-label" asp-for="Code">Code</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="Name" class="form-control" required />
+                            <label class="form-label" asp-for="Name">Name</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="Division" class="form-control" required />
+                            <label class="form-label" asp-for="Division">Division</label>
+                        </div>
+
+                        
+                            <button type="submit" class="btn btn-secondary btn-block">Save</button>
+                           
+                        
+                        
+                        
+                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        
+                        
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input asp-for="Name" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Division</label>
-        <input asp-for="Division" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-outline-primary">Save</button>
-    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
-</form>
+</section>
+
 

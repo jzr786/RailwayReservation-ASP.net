@@ -2,36 +2,58 @@
 
 @{
     var schedule = ViewBag.TrainSchedule as RailwayReservation.Models.TrainSchedule;
+    ViewData["Title"] = "Book Seats";
 }
 
-<h2>Book Seats</h2>
+<section class="text-center text-lg-start">
+    <div class="card mb-3 shadow">
+        <div class="row g-0 d-flex align-items-center">
+            <div class="col-lg-4 d-none d-lg-flex">
+                <img src="https://img.freepik.com/free-photo/vertical-shot-railway-station-with-train-sunrise_181624-13413.jpg"
+                     alt="Train Image" class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body py-5 px-md-5">
+                    <h2 class="fw-bold mb-5">Book Your Seats</h2>
 
-<form asp-action="Create" method="post">
-    <input type="hidden" name="trainScheduleId" value="@schedule.Id" />
-    <div class="form-group">
-        <label>Train</label>
-        <input class="form-control" value="@schedule.Train.Name" readonly />
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" name="trainScheduleId" value="@schedule.Id" />
+
+                        <div class="form-outline mb-4">
+                            <input class="form-control" value="@schedule.Train.Name" readonly />
+                            <label class="form-label">Train</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input class="form-control" value="@schedule.FromStation.Name" readonly />
+                            <label class="form-label">From Station</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input class="form-control" value="@schedule.ToStation.Name" readonly />
+                            <label class="form-label">To Station</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <select class="form-control" id="seatType" name="seatType" required>
+                                <option value="">-- Select Seat Type --</option>
+                                <option value="AC1">AC1</option>
+                                <option value="AC3">AC3</option>
+                                <option value="Sleeper">Sleeper</option>
+                            </select>
+                            <label class="form-label" for="seatType">Seat Type</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input type="number" class="form-control" id="numberOfSeats" name="numberOfSeats" min="1" required />
+                            <label class="form-label" for="numberOfSeats">Number of Seats</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary btn-block mb-4">Book</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label>From Station</label>
-        <input class="form-control" value="@schedule.FromStation.Name" readonly />
-    </div>
-    <div class="form-group">
-        <label>To Station</label>
-        <input class="form-control" value="@schedule.ToStation.Name" readonly />
-    </div>
-    <div class="form-group">
-        <label for="seatType">Seat Type</label>
-        <select class="form-control" id="seatType" name="seatType" required>
-            <option value="">-- Select Seat Type --</option>
-            <option value="AC1">AC1</option>
-            <option value="AC3">AC3</option>
-            <option value="Sleeper">Sleeper</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="numberOfSeats">Number of Seats</label>
-        <input type="number" class="form-control" id="numberOfSeats" name="numberOfSeats" min="1" required />
-    </div>
-    <button type="submit" class="btn btn-outline-success">Book</button>
-</form>
+</section>
