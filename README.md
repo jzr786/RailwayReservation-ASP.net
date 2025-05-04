@@ -125,7 +125,7 @@ await RoleInitializer.SeedRolesAndAdminAsync(serviceProvider);
 
 ## Screenshots
 
-![Alt text](D:\asp practice\RailwayReservation)
+![RailwayReservation](https://github.com/user-attachments/assets/297518a5-43da-439a-a997-dfeb5103f66f)
 
 
 ## ✍️ Author
@@ -138,6 +138,7 @@ MIT License – Open for learning and educational use.
 ---
 
 Let me know if you'd like me to include a **deployment guide**, **Docker support**, or **screenshots section**.
+
 
 
 
