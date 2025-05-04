@@ -73,6 +73,10 @@ An ASP.NET Core MVC 8.0-based web application for managing train reservations, s
 
 ---
 
+## Screenshot
+
+![Alt text](/RailwayReservation.png)
+
 ## 🚀 Getting Started
 
 ### 1. Clone the Repo
